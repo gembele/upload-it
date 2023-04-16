@@ -6,7 +6,7 @@ function SignUp() {
     const emailRef = useRef();
     const passwordRef = useRef();
     const passwordConfirmRef = useRef();
-    const { signup } = useAuth();
+    const { signup, currentUser } = useAuth();
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
@@ -22,7 +22,7 @@ function SignUp() {
             setError('');
             setLoading(true);
             await signup(emailRef.current.value, passwordRef.current.value);
-            // Tutaj możesz dodać odpowiednie przekierowanie po zarejestrowaniu
+            // route
         } catch (err) {
             setError('Failed to create an account');
         }
@@ -35,6 +35,7 @@ function SignUp() {
         <Card style={{backgroundColor:"#1e1414", border:"10px solid #1e1414"}}>
           <Card.Body>
             <h2 className='text-center mb-4'>Sign Up</h2>
+            {currentUser && currentUser.email}
               {error && <Alert variant='danger'>{error}</Alert>}
             <Form onSubmit={handleSubmit}>
   
@@ -52,7 +53,7 @@ function SignUp() {
   
               <Form.Group id='password-confirm'>
                 <Form.Label>Confirm Password</Form.Label>
-                <Form.Control style={{border:"3px solid blue", borderRadius:"10px"}} size="sm" type='password-confirm' ref={passwordConfirmRef} required/>
+                <Form.Control style={{border:"3px solid blue", borderRadius:"10px"}} size="sm" type='password' ref={passwordConfirmRef} required/>
               </Form.Group>
   
               <Button disabled={loading} className="mt-4" style={{backgroundColor: "blue", width:"100%"}}type='submit'>Submit</Button>
