@@ -7,7 +7,7 @@ import SignUp from './SignUp';
 function LogIn() {
     const emailRef = useRef();
     const passwordRef = useRef();
-    const { login } = useAuth();
+    const { login, anonymousLogin } = useAuth();
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
@@ -26,6 +26,16 @@ function LogIn() {
 
         setLoading(false);
     }
+
+    async function handleAnnymous() {
+      try {
+          await anonymousLogin();
+          navigate("/");
+      } catch (err) {
+          setError('Failed to log in');
+      }
+
+  }
 
     return (
         <>
@@ -52,7 +62,9 @@ function LogIn() {
             </Form>
               <div className="text-center mb-4 mt-3">
                   <Link to="../signup">Sign Up</Link> if you don't have an account already 
+                  <Button style={{marginBottom: "-20px", marginTop:"20px"}} onClick={handleAnnymous} >Log in as anonymous</Button>
               </div>
+              
           </Card.Body>
         </Card>
         
