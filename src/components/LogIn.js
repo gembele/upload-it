@@ -30,7 +30,7 @@ function LogIn() {
     async function handleAnnymous() {
       try {
           await anonymousLogin();
-          navigate("/");
+          navigate("/home");
       } catch (err) {
           setError('Failed to log in');
       }
@@ -62,7 +62,7 @@ function LogIn() {
             </Form>
               <div className="text-center mb-4 mt-3">
                   <Link to="../signup">Sign Up</Link> if you don't have an account already 
-                  <Button style={{marginBottom: "-20px", marginTop:"20px"}} onClick={handleAnnymous} >Log in as anonymous</Button>
+                  <Button style={{marginBottom: "-20px", marginTop:"20px"}} onClick={handleAnnymous} >Continue as anonymous</Button>
               </div>
               
           </Card.Body>

@@ -3,7 +3,7 @@ import { Button, Card, Alert } from 'react-bootstrap';
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
-export default function Dashboard() {
+export default function Profile() {
 
   const [error, setError] = useState('');
   const { currentUser, logout } = useAuth();

@@ -1,7 +1,8 @@
 import React from "react";
 import SignUp from "./SignUp";
-import Dashboard from "./Dashboard";
+import Profile from "./Profile";
 import LogIn from "./LogIn";
+import Home from "./Home";
 import { Container } from "react-bootstrap";
 import { AuthProvider } from "../contexts/AuthContext";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
@@ -35,7 +36,8 @@ function App() {
         <Router>
           <AuthProvider>
             <Routes>
-              <Route path="/" element={<PrivateRoute><Dashboard /></PrivateRoute>}/>
+              <Route path="/" element={<PrivateRoute><Profile /></PrivateRoute>}/>
+              <Route path="/home" element={<Home/>}/>
               <Route path="/signup" element={<SignUp />} />
               <Route path="/login" element={<LogIn />} />
             </Routes>

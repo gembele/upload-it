@@ -10,5 +10,9 @@ export default function PrivateRoute({ children }) {
         return <Navigate to='/login'/>
     }
 
+    if(!currentUser.email) {
+        return <Navigate to='/home'/>
+    }
+
     return children;
 }
