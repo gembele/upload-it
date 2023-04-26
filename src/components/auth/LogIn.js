@@ -1,8 +1,8 @@
 import React, { useRef, useState } from 'react';
 import { Form, Button, Card, Alert } from 'react-bootstrap';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../../contexts/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
-import SignUp from './SignUp';
+import CenteredContainer from './CenteredContainer';
 
 function LogIn() {
     const emailRef = useRef();
@@ -19,7 +19,7 @@ function LogIn() {
             setError('');
             setLoading(true);
             await login(emailRef.current.value, passwordRef.current.value);
-            navigate("/");
+            navigate("../home");
         } catch (err) {
             setError('Failed to log in');
         }
@@ -38,15 +38,13 @@ function LogIn() {
   }
 
     return (
-        <>
+        <CenteredContainer>
         <Card style={{backgroundColor:"#1e1414", border:"10px solid #1e1414"}}>
           <Card.Body>
             <h2 className='text-center mb-4'>Log In</h2>
               {error && <Alert variant='danger'>{error}</Alert>}
             <Form onSubmit={handleSubmit}>
-  
-              
-              
+
               <Form.Group id='email'>
                 <Form.Label>E-mail</Form.Label>
                 <Form.Control style={{border:"3px solid blue", borderRadius:"10px"}} size="sm" type='email' ref={emailRef} required/>
@@ -68,7 +66,7 @@ function LogIn() {
           </Card.Body>
         </Card>
         
-      </>
+      </CenteredContainer>
     );
 }
 

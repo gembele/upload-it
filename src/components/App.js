@@ -1,38 +1,16 @@
 import React from "react";
-import SignUp from "./SignUp";
+import SignUp from "./auth/SignUp";
 import Profile from "./Profile";
-import LogIn from "./LogIn";
+import LogIn from "./auth/LogIn";
 import Home from "./Home";
 import { Container } from "react-bootstrap";
 import { AuthProvider } from "../contexts/AuthContext";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import PrivateRoute from "./PrivateRoute";
+import PrivateRoute from "./auth/PrivateRoute";
+import CenteredContainer from "./auth/CenteredContainer";
 
 function App() {
   return (
-    <Container
-      style={{
-        backgroundColor: "#2f303a",
-        width: "100%",
-        minHeight: "100vh",
-        display: "flex",
-        justifyContent: "center",
-        maxWidth: "100%",
-      }}
-    >
-      <div
-        className="w-100"
-        style={{
-          maxWidth: "700px",
-          backgroundColor: "#1e1414",
-          color: "white",
-          boxShadow: "4px 4px black",
-          borderRadius: "10px",
-          alignSelf: "center",
-          paddingInline: "150px",
-          width: "100vh",
-        }}
-      >
         <Router>
           <AuthProvider>
             <Routes>
@@ -43,8 +21,6 @@ function App() {
             </Routes>
           </AuthProvider>
         </Router>
-      </div>
-    </Container>
   );
 }
 
