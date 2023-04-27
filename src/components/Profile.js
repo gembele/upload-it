@@ -1,19 +1,18 @@
 import React, {useState, useRef} from 'react'
 import { Button, Modal, Form } from 'react-bootstrap';
 import { useAuth } from '../contexts/AuthContext';
-import { useNavigate } from 'react-router-dom';
 import PrimaryContainer from './auth/PrimaryContainer';
 import SecondaryContainer from './auth/SecondaryContainer';
 import NavBarComponent from './NavBarComponent';
+import { database } from '../firebase';
 
 export default function Profile() {
 
 
   const titleRef = useRef();
   const [error, setError] = useState('');
-  const { currentUser, logout } = useAuth();
+  const { currentUser } = useAuth();
   const [open, setOpen] = useState(false);
-  const navigate = useNavigate();
 
   function openModal() {
     setOpen(true);
@@ -23,14 +22,15 @@ export default function Profile() {
     setOpen(false);
   }
 
-  async function handleSubmit(e) {
-    e.preventDefault()
-    setError('');
-    try {
+  function handleSubmit(e) {
+    e.preventDefault();
       setOpen(false);
-    }catch {
-      setError('Post adding failed');
-    }
+      database.posts.add({
+        title: titleRef.current.value,
+        user: currentUser.uid,
+        points: 0
+      })
+
   }
 
   return (
@@ -56,16 +56,15 @@ export default function Profile() {
       <Modal show={open} onHide={closeModal} size='lg'>
         <Modal.Body style={{width:'900px', backgroundColor:'black'}} >
           <Form onSubmit={handleSubmit}>
-            <Form.Group id='email'>
+            <Form.Group id='title'>
               <Form.Label style={{color:'white'}}>Title</Form.Label>
               <Form.Control style={{border:"3px solid blue", borderRadius:"10px"}} size="sm" type='title' ref={titleRef} required/>
             </Form.Group>
-            <Button onClick={closeModal} style={{margin:'10px', backgroundColor:'blue'}}>Close</Button>
             <Button style={{backgroundColor: "blue", margin:'10px'}} type='submit'>Confirm</Button>
 
+            
           </Form>
         </Modal.Body>
-        <Modal.Footer/>
       </Modal>
       
       <SecondaryContainer>

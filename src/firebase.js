@@ -1,5 +1,6 @@
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
+import "firebase/compat/firestore"
 
 
 // Konfiguracja Firebase
@@ -14,6 +15,10 @@ const app = firebase.initializeApp({
 
 // Inicjalizacja Firebase
 export const auth = app.auth();
-
+const firestore = app.firestore()
+export const database = {
+  posts: firestore.collection('posts'),
+  users: firestore.collection('users')
+}
 
 export default firebase;

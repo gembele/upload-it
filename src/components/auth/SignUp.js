@@ -3,6 +3,7 @@ import { Form, Button, Card, Alert } from 'react-bootstrap';
 import { useAuth } from '../../contexts/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
 import CenteredContainer from './CenteredContainer';
+import { database } from '../../firebase';
 
 function SignUp() {
     const emailRef = useRef();
@@ -25,6 +26,13 @@ function SignUp() {
             setError('');
             setLoading(true);
             await signup(emailRef.current.value, passwordRef.current.value);
+
+            database.users.add({
+              username: '',
+              points: 0,
+              email: emailRef.current.value
+            })
+
             navigate("/login");
         } catch (err) {
             setError('Failed to create an account');
