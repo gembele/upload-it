@@ -18,7 +18,8 @@ export const auth = app.auth();
 const firestore = app.firestore()
 export const database = {
   posts: firestore.collection('posts'),
-  users: firestore.collection('users')
+  users: firestore.collection('users'),
 }
+
 
 export default firebase;
