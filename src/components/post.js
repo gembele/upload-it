@@ -18,9 +18,7 @@ export default function Post({ id, title, user, points, url}) {
         if (data.voters) {
           setVoters(data.voters);
         }
-      } else {
-        setError("No such document!");
-      }
+      } 
     }).catch((error) => {
       setError("Error getting document:", error);
     });
@@ -48,7 +46,6 @@ export default function Post({ id, title, user, points, url}) {
   return (
     <div style={{ width: '100%', borderTop: '2px solid white' }}>
       <h3>{title}</h3>
-      <p>id: {database.posts.doc(id).id}</p>
       <div style={{width:'100%', height:'80%'}}>
         <img src={url} width={'100%'}/>
       </div>

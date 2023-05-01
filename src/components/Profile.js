@@ -54,7 +54,6 @@ export default function Profile() {
     );
     database.posts
     .add({
-      //id: data.id,
       title: titleRef.current.value,
       user: currentUser.uid,
       points: 0,
@@ -102,7 +101,7 @@ export default function Profile() {
             
           </div>
           <div style={{margin:'auto'}}>
-            <strong style={{color:'white'}}>Username: {currentUser.email}</strong>
+            <strong style={{color:'white'}}>Email: {currentUser.email}</strong>
             <p style={{color:'white'}}>Points: {currentUser.points}</p>
           </div>
         
@@ -130,7 +129,7 @@ export default function Profile() {
         <SecondaryContainer>
           <h2 className='text-center mb-4' style={{color:'white'}}>My posts</h2>
           {posts.filter((post) => post.user === currentUser.uid).map((post) => (
-              <Post key={post.id} title={post.title} user={post.user} points={post.points} url={post.url} />
+              <Post key={post.id} id={post.id} title={post.title} user={post.user} points={post.points} url={post.url} />
           ))}
 
         </SecondaryContainer>
