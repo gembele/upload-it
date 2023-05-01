@@ -54,6 +54,7 @@ export default function Profile() {
     );
     database.posts
     .add({
+      //id: data.id,
       title: titleRef.current.value,
       user: currentUser.uid,
       points: 0,
@@ -76,6 +77,7 @@ export default function Profile() {
         });
       });
       setPosts(postsData);
+      console.log(posts);
     });
 
     return unsubscribe;
