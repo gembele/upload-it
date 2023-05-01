@@ -15,7 +15,7 @@ export default function Home() {
 
 
   useEffect(() => {
-    const unsubscribe = database.posts.onSnapshot(snapshot => {
+    const unsubscribe = database.posts.orderBy('points', 'desc').onSnapshot(snapshot => {
       const postsData = [];
       snapshot.forEach(doc => {
         const data = doc.data();
@@ -23,7 +23,8 @@ export default function Home() {
           id: doc.id,
           title: data.title,
           user: data.user,
-          points: data.points
+          points: data.points,
+          url: data.url
         });
       });
       setPosts(postsData);
@@ -39,7 +40,7 @@ export default function Home() {
         <SecondaryContainer>
           <h2 className='text-center mb-4' style={{color:'white'}}>Home</h2>
           {posts.map((post) => (
-            <Post key={post.id} title={post.title} user={post.user} points={post.points} />
+            <Post key={post.id} title={post.title} user={post.user} points={post.points} url={post.url} />
           ))}
         </SecondaryContainer>
       </PrimaryContainer>

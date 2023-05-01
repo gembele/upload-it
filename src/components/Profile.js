@@ -1,21 +1,22 @@
-import React, {useEffect, useState, useRef} from 'react'
+import React, { useEffect, useState, useRef } from 'react';
 import { Button, Modal, Form } from 'react-bootstrap';
 import { useAuth } from '../contexts/AuthContext';
 import PrimaryContainer from './auth/PrimaryContainer';
 import SecondaryContainer from './auth/SecondaryContainer';
 import NavBarComponent from './NavBarComponent';
-import { database } from '../firebase';
+import { database, storage } from '../firebase';
 import Post from './post';
+import { ref, getDownloadURL, uploadBytesResumable } from 'firebase/storage';
 
 export default function Profile() {
-
-
+  const [file, setFile] = useState();
+  const [imgUrl, setImgUrl] = useState();
   const titleRef = useRef();
   const [error, setError] = useState('');
   const { currentUser } = useAuth();
   const [open, setOpen] = useState(false);
   const [posts, setPosts] = useState([]);
-
+  const [user, setUser] = useState(null);
 
   function openModal() {
     setOpen(true);
@@ -25,27 +26,53 @@ export default function Profile() {
     setOpen(false);
   }
 
+
+  function handleChange(event) {
+    setFile(event.target.files[0]);
+  }
+
   function handleSubmit(e) {
     e.preventDefault();
-      setOpen(false);
-      database.posts.add({
-        title: titleRef.current.value,
-        user: currentUser.uid,
-        points: 0
-      })
+    if (!file) return;
+    const storageRef = ref(storage, `files/${currentUser.uid}/${file.name}`);
+    const uploadTask = uploadBytesResumable(storageRef, file);
 
+    uploadTask.on(
+      'state_changed',
+      (snapshot) => {},
+      (error) => {
+        setError(error.message);
+      },
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          setImgUrl(downloadURL)
+            .catch((error) => {
+              setError(error.message);
+            });
+        });
+      }
+    );
+    database.posts
+    .add({
+      title: titleRef.current.value,
+      user: currentUser.uid,
+      points: 0,
+      url: imgUrl,
+    })
+    setOpen(false);
   }
 
   useEffect(() => {
-    const unsubscribe = database.posts.onSnapshot(snapshot => {
+    const unsubscribe = database.posts.orderBy('points', 'desc').onSnapshot((snapshot) => {
       const postsData = [];
-      snapshot.forEach(doc => {
+      snapshot.forEach((doc) => {
         const data = doc.data();
         postsData.push({
           id: doc.id,
           title: data.title,
           user: data.user,
-          points: data.points
+          points: data.points,
+          url: data.url,
         });
       });
       setPosts(postsData);
@@ -53,6 +80,15 @@ export default function Profile() {
 
     return unsubscribe;
   }, []);
+
+  useEffect(() => {
+    const userRef = database.users.doc(currentUser.uid);
+    userRef.get().then((doc) => {
+      if (doc.exists) {
+        setUser(doc.data());
+      }
+    });
+  }, [currentUser]);
 
   return (
     <>
@@ -64,7 +100,7 @@ export default function Profile() {
             
           </div>
           <div style={{margin:'auto'}}>
-            <strong style={{color:'white'}}>Email: {currentUser.email}</strong>
+            <strong style={{color:'white'}}>Username: {currentUser.email}</strong>
             <p style={{color:'white'}}>Points: {currentUser.points}</p>
           </div>
         
@@ -80,6 +116,7 @@ export default function Profile() {
             <Form.Group id='title'>
               <Form.Label style={{color:'white'}}>Title</Form.Label>
               <Form.Control style={{border:"3px solid blue", borderRadius:"10px"}} size="sm" type='title' ref={titleRef} required/>
+              <Form.Control type='file' onChange={handleChange} />
             </Form.Group>
             <Button style={{backgroundColor: "blue", margin:'10px'}} type='submit'>Confirm</Button>
 
@@ -91,7 +128,7 @@ export default function Profile() {
         <SecondaryContainer>
           <h2 className='text-center mb-4' style={{color:'white'}}>My posts</h2>
           {posts.filter((post) => post.user === currentUser.uid).map((post) => (
-              <Post key={post.id} title={post.title} user={post.user} points={post.points} />
+              <Post key={post.id} title={post.title} user={post.user} points={post.points} url={post.url} />
           ))}
 
         </SecondaryContainer>

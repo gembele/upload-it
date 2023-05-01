@@ -6,6 +6,7 @@ import CenteredContainer from './CenteredContainer';
 import { database } from '../../firebase';
 
 function SignUp() {
+    const usernameRef = useRef();
     const emailRef = useRef();
     const passwordRef = useRef();
     const passwordConfirmRef = useRef();
@@ -28,7 +29,7 @@ function SignUp() {
             await signup(emailRef.current.value, passwordRef.current.value);
 
             database.users.add({
-              username: '',
+              username: usernameRef.current.value,
               points: 0,
               email: emailRef.current.value
             })
@@ -49,7 +50,10 @@ function SignUp() {
               {error && <Alert variant='danger'>{error}</Alert>}
             <Form onSubmit={handleSubmit}>
   
-              
+            <Form.Group id='username'>
+                <Form.Label>Username</Form.Label>
+                <Form.Control style={{border:"3px solid blue", borderRadius:"10px"}} size="sm" type='text' ref={usernameRef} required/>
+              </Form.Group>
               
               <Form.Group id='email'>
                 <Form.Label>E-mail</Form.Label>
