@@ -3,7 +3,7 @@ import { Navbar, Nav, Button, Modal, Form } from 'react-bootstrap'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext';
 
-export default function NavBarComponent() {
+export default function NavBarComponent({navigation}) {
 
     const [error, setError] = useState('');
     const searchRef = useRef();
@@ -30,13 +30,16 @@ export default function NavBarComponent() {
     }
   }
 
+
   async function handleSubmit1(e) {
     e.preventDefault()
     setError('');
     try {
       setOpen(false);
+      console.log(searchRef.current.value)
+      navigate("/search", {state:  {SearchQuery: searchRef.current.value}});
     }catch {
-      setError('Post adding failed');
+      setError('Searching failed');
     }
   }
 
@@ -55,7 +58,7 @@ export default function NavBarComponent() {
         <Modal show={open} onHide={closeModal1} size='lg'>
             <Modal.Body style={{width:'900px', backgroundColor:'black'}} >
             <Form onSubmit={handleSubmit1}>
-                <Form.Group id='email'>
+                <Form.Group id='search'>
                 <Form.Label style={{color:'white'}}>Search</Form.Label>
                 <Form.Control style={{border:"3px solid blue", borderRadius:"10px"}} size="sm" type='search' ref={searchRef} required/>
                 </Form.Group>
