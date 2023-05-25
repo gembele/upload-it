@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Button, Modal, Form } from 'react-bootstrap';
+import { Button, Modal, Form, Alert } from 'react-bootstrap';
 import { useAuth } from '../contexts/AuthContext';
 import PrimaryContainer from './auth/PrimaryContainer';
 import SecondaryContainer from './auth/SecondaryContainer';
@@ -17,6 +17,7 @@ export default function Profile() {
   const [open, setOpen] = useState(false);
   const [posts, setPosts] = useState([]);
   const [user, setUser] = useState(null);
+  const [sum, setSum] = useState(0);
 
   function openModal() {
     setOpen(true);
@@ -76,7 +77,17 @@ export default function Profile() {
         });
       });
       setPosts(postsData);
-      console.log(posts);
+
+      let pointSum = 0;
+
+      postsData.forEach(element => {
+        if(currentUser.uid === element.user) 
+        {
+          pointSum += element.points;
+        }
+      })
+
+      setSum(pointSum);
     });
 
     return unsubscribe;
@@ -102,7 +113,7 @@ export default function Profile() {
           </div>
           <div style={{margin:'auto'}}>
             <strong style={{color:'white'}}>Email: {currentUser.email}</strong>
-            <p style={{color:'white'}}>Points: {currentUser.points}</p>
+            <p style={{color:'white'}}>Points: {sum}</p>
           </div>
         
         </div>
@@ -113,6 +124,7 @@ export default function Profile() {
 
       <Modal show={open} onHide={closeModal} size='lg'>
         <Modal.Body style={{width:'900px', backgroundColor:'black'}} >
+          <Alert variant='info'>To add a post, insert title and add media below</Alert>
           <Form onSubmit={handleSubmit}>
             <Form.Group id='title'>
               <Form.Label style={{color:'white'}}>Title</Form.Label>

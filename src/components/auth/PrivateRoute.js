@@ -1,6 +1,7 @@
 import React from 'react'
 import { Navigate } from 'react-router-dom'
 import { useAuth } from '../../contexts/AuthContext'
+import { Alert } from 'react-bootstrap';
 
 export default function PrivateRoute({ children }) {
 
@@ -11,7 +12,10 @@ export default function PrivateRoute({ children }) {
     }
 
     if(!currentUser.email) {
-        return <Navigate to='/home'/>
+        return (
+        <Navigate to='/home'/>
+        )
+        
     }
 
     return children;

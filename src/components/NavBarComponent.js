@@ -2,6 +2,7 @@ import React, {useState, useRef} from 'react'
 import { Navbar, Nav, Button, Modal, Form } from 'react-bootstrap'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext';
+import { Alert } from 'react-bootstrap';
 
 export default function NavBarComponent({navigation}) {
 
@@ -53,11 +54,12 @@ export default function NavBarComponent({navigation}) {
             Upload-It
         </Navbar.Brand>
         <Nav.Link as={Button} onClick={openModal1} style={{color:'white', height: '40px', marginInline:'5px', paddingInline:'5px'}} >Search</Nav.Link>
-        <Nav.Link as={Button} onClick={goToProfile} style={{color:'white', height: '40px', marginInline:'5px', paddingInline:'5px'}}>Profile</Nav.Link>
+        <Nav.Link as={Button} onClick={goToProfile} style={{color:'white', height: '40px', marginInline:'5px', paddingInline:'5px'}} disabled={(currentUser.email===null ? true: false)} >Profile</Nav.Link>
         <Nav.Link as={Button} onClick={handleLogout} style={{color:'white', height: '40px', marginInline:'5px', paddingInline:'5px'}}>Log Out</Nav.Link>
         <Modal show={open} onHide={closeModal1} size='lg'>
             <Modal.Body style={{width:'900px', backgroundColor:'black'}} >
             <Form onSubmit={handleSubmit1}>
+            <Alert variant='info'>To find a post, insert text in a text input below</Alert>
                 <Form.Group id='search'>
                 <Form.Label style={{color:'white'}}>Search</Form.Label>
                 <Form.Control style={{border:"3px solid blue", borderRadius:"10px"}} size="sm" type='search' ref={searchRef} required/>
