@@ -45,22 +45,24 @@ export default function Profile() {
         setError(error.message);
       },
       () => {
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          setImgUrl(downloadURL)
-            .catch((error) => {
-              setError(error.message);
+        getDownloadURL(uploadTask.snapshot.ref)
+          .then((downloadURL) => {
+            setImgUrl(downloadURL);
+            return database.posts.add({
+              title: titleRef.current.value,
+              user: currentUser.uid,
+              points: 0,
+              url: downloadURL, // Używamy downloadURL jako wartość pola "url"
             });
-        });
+          })
+          .then(() => {
+            setOpen(false);
+          })
+          .catch((error) => {
+            setError(error.message);
+          });
       }
     );
-    database.posts
-    .add({
-      title: titleRef.current.value,
-      user: currentUser.uid,
-      points: 0,
-      url: imgUrl,
-    })
-    setOpen(false);
   }
 
   useEffect(() => {

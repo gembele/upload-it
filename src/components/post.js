@@ -12,21 +12,21 @@ export default function Post({ id, title, user, points, url}) {
   const [admin, setAdmin] = useState(false);
   const [owner, setOwner] = useState(false);
   const [deleter, setDeleter] = useState(false);
+  const [currentPage, setCurrentPage] = useState('');
   const postRef = database.posts.doc(id);
 
   const checkUser = () => {
     if(currentUser.uid === 'Lb0XpWx8q5dAJ2RNq9dbSKIodPC2'){
       setAdmin(true);
-      console.log("admin? " + admin);
-      console.log(currentUser.uid)
     }
     if(admin || owner){
       setDeleter(true);
-      console.log("deleter? " + deleter)
     }
   }
 
   useEffect(() => {
+    setCurrentPage(window.location.pathname);
+    console.log(currentPage);
     checkUser();
     postRef.get().then((doc) => {
       if (doc.exists) {
@@ -36,14 +36,40 @@ export default function Post({ id, title, user, points, url}) {
         }
         if (data.user === currentUser.uid){
           setOwner(true);
-          console.log("owner? "+ owner );
-          console.log(data.user);
         }
       } 
     }).catch((error) => {
       setError("Error getting document:", error);
     });
   }, []);
+
+  function handleDelete() {
+    postRef
+      .delete()
+      .then(() => {
+        // Usunięcie posta z powodzeniem
+        console.log("Post deleted successfully");
+      })
+      .catch((error) => {
+        // Obsługa błędów podczas usuwania posta
+        console.error("Error deleting post: ", error);
+      });
+  }
+
+  function checkPage(currentPage) {
+    if(admin){
+      return <Button onClick={handleDelete} style={{backgroundColor:'black', marginBottom:'20px'}}>Delete</Button>
+    }
+    else {
+      if(currentPage === '/' && owner) {
+        return <Button onClick={handleDelete} style={{backgroundColor:'black', marginBottom:'20px'}}>Delete</Button>
+      }
+      else if(currentPage === '/home' && owner) {
+        return <Button onClick={handleDelete} style={{backgroundColor:'black', marginBottom:'20px'}}>Delete</Button>
+      }
+    }
+  }
+  
 
   function handleUpvote() {
     const user = currentUser;
@@ -71,8 +97,11 @@ export default function Post({ id, title, user, points, url}) {
       </div>
       <p>Points: {points}</p>
       {error && <Alert variant='danger'>{error}</Alert>}
-      <Button onClick={handleUpvote} style={{backgroundColor:'black', marginBottom:'20px'}}>Upvote</Button>
-      { admin && <Button onClick={handleUpvote} style={{backgroundColor:'black', marginBottom:'20px'}}>delete</Button>}
+        <div style={{display: 'flex', justifyContent:'space-between'}}>
+        <Button onClick={handleUpvote} style={{backgroundColor:'black', marginBottom:'20px'}}>Upvote</Button>
+        {checkPage(currentPage)}
+      </div>
+      
     </div>
   );
 }
